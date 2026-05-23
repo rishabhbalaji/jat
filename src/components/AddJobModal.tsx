@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useJobStore, SUB_STATUSES, COLUMNS, COLUMN_DEFAULT_SUBSTATUS } from '../lib/store';
 import type { Job } from '../lib/store';
 import { X } from 'lucide-react';
@@ -40,7 +41,7 @@ export const AddJobModal: React.FC<AddJobModalProps> = ({ onClose, jobToEdit, de
     }
   };
 
-  return (
+  return createPortal(
     <div className="modal-backdrop">
       <div className="modal-content">
         <div className="modal-header">
@@ -219,6 +220,7 @@ export const AddJobModal: React.FC<AddJobModalProps> = ({ onClose, jobToEdit, de
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

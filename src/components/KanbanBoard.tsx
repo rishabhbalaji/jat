@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { DndContext, PointerSensor, useSensor, useSensors, DragOverlay, closestCorners } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useJobStore, COLUMNS } from '../lib/store';
@@ -136,7 +137,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
         />
       )}
 
-      {promptJobId && (
+      {promptJobId && createPortal(
         <div className="modal-backdrop">
           <div className="modal-content" style={{ maxWidth: '400px' }}>
             <div className="modal-header">
@@ -164,7 +165,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

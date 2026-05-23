@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { X } from 'lucide-react';
 
@@ -29,7 +30,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
     }
   };
 
-  return (
+  return createPortal(
     <div className="modal-backdrop">
       <div className="modal-content" style={{ maxWidth: '400px' }}>
         <div className="modal-header">
@@ -68,6 +69,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
