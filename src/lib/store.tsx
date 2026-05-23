@@ -12,6 +12,7 @@ export interface Job {
   dateApplied?: string;
   link?: string;
   location?: string;
+  workplaceType?: string;
   notes?: string;
   salary?: string;
   contactName?: string;
@@ -68,7 +69,7 @@ interface JobStoreState {
 }
 
 interface JobStoreContextValue extends JobStoreState {
-  addJob: (company: string, role: string, statusId: string, subStatus?: string, dateApplied?: string, link?: string, location?: string, notes?: string, salary?: string, contactName?: string) => void;
+  addJob: (company: string, role: string, statusId: string, subStatus?: string, dateApplied?: string, link?: string, location?: string, workplaceType?: string, notes?: string, salary?: string, contactName?: string) => void;
   updateJobStatus: (id: string, newStatusId: string) => void;
   updateJobSubStatus: (id: string, newSubStatusId: string) => void;
   updateJob: (id: string, updates: Partial<Omit<Job, 'id' | 'createdAt' | 'updatedAt'>>) => void;
@@ -136,7 +137,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   }, []);
 
-  const addJob = async (company: string, role: string, statusId: string, subStatus?: string, dateApplied?: string, link?: string, location?: string, notes?: string, salary?: string, contactName?: string) => {
+  const addJob = async (company: string, role: string, statusId: string, subStatus?: string, dateApplied?: string, link?: string, location?: string, workplaceType?: string, notes?: string, salary?: string, contactName?: string) => {
     const newJob: Job = {
       id: uuidv4(),
       company,
@@ -146,6 +147,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       dateApplied,
       link,
       location,
+      workplaceType,
       notes,
       salary,
       contactName,

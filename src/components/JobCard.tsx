@@ -53,10 +53,19 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
         {isStale && <span title="Stale for 2+ weeks"><AlertCircle size={16} className="text-warning" /></span>}
       </div>
       <p className="job-role">{job.role}</p>
-      {job.location && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          <MapPin size={14} />
-          <span>{job.location}</span>
+      {(job.location || job.workplaceType) && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1rem' }}>
+          {job.location && job.location.split(',').filter(loc => loc.trim()).map((loc, idx) => (
+            <span key={idx} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', background: '#1e293b', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+              <MapPin size={12} />
+              {loc.trim()}
+            </span>
+          ))}
+          {job.workplaceType && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', background: '#3b82f620', color: '#60a5fa', padding: '0.1rem 0.4rem', borderRadius: '4px', border: '1px solid #3b82f640' }}>
+              {job.workplaceType}
+            </span>
+          )}
         </div>
       )}
       

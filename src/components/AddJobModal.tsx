@@ -19,6 +19,7 @@ export const AddJobModal: React.FC<AddJobModalProps> = ({ onClose, jobToEdit, de
   const [dateApplied, setDateApplied] = useState(jobToEdit?.dateApplied || new Date().toISOString().split('T')[0]);
   const [link, setLink] = useState(jobToEdit?.link || '');
   const [location, setLocation] = useState(jobToEdit?.location || '');
+  const [workplaceType, setWorkplaceType] = useState(jobToEdit?.workplaceType || '');
   const [notes, setNotes] = useState(jobToEdit?.notes || '');
   const [salary, setSalary] = useState(jobToEdit?.salary || '');
   const [contactName, setContactName] = useState(jobToEdit?.contactName || '');
@@ -27,13 +28,13 @@ export const AddJobModal: React.FC<AddJobModalProps> = ({ onClose, jobToEdit, de
     e.preventDefault();
     if (company.trim() && role.trim()) {
       if (jobToEdit) {
-        updateJob(jobToEdit.id, { company: company.trim(), role: role.trim(), dateApplied, link: link.trim(), location: location.trim(), notes: notes.trim(), salary: salary.trim(), contactName: contactName.trim() });
+        updateJob(jobToEdit.id, { company: company.trim(), role: role.trim(), dateApplied, link: link.trim(), location: location.trim(), workplaceType, notes: notes.trim(), salary: salary.trim(), contactName: contactName.trim() });
         // Handle status update if it changed
         if (jobToEdit.subStatus !== subStatus) {
            updateJobSubStatus(jobToEdit.id, subStatus);
         }
       } else {
-        addJob(company.trim(), role.trim(), statusId, subStatus, dateApplied, link.trim(), location.trim(), notes.trim(), salary.trim(), contactName.trim());
+        addJob(company.trim(), role.trim(), statusId, subStatus, dateApplied, link.trim(), location.trim(), workplaceType, notes.trim(), salary.trim(), contactName.trim());
       }
       onClose();
     }
@@ -76,8 +77,32 @@ export const AddJobModal: React.FC<AddJobModalProps> = ({ onClose, jobToEdit, de
               id="location"
               value={location}
               onChange={e => setLocation(e.target.value)}
-              placeholder="e.g. London, Remote"
+              placeholder="e.g. London, New York"
             />
+          </div>
+          <div className="form-group">
+            <label>Workplace Type</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {['Remote', 'Hybrid', 'On-site'].map(type => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setWorkplaceType(type === workplaceType ? '' : type)}
+                  style={{
+                    flex: 1,
+                    padding: '0.4rem',
+                    borderRadius: '4px',
+                    border: `1px solid ${workplaceType === type ? 'var(--secondary-color)' : '#334155'}`,
+                    backgroundColor: workplaceType === type ? 'rgba(59, 130, 246, 0.1)' : '#0b1120',
+                    color: workplaceType === type ? 'var(--secondary-color)' : 'var(--text-color)',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="form-group" style={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>

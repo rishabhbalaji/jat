@@ -41,7 +41,12 @@ export const JobListView: React.FC<JobListViewProps> = ({ jobs }) => {
             
             <div className="job-list-card-meta">
               <span className="job-role-list">{job.role}</span>
-              {job.location && <span className="meta-item"><MapPin size={14}/> {job.location}</span>}
+              {job.location && job.location.split(',').filter(loc => loc.trim()).map((loc, idx) => (
+                <span key={idx} className="meta-item"><MapPin size={14}/> {loc.trim()}</span>
+              ))}
+              {job.workplaceType && (
+                 <span className="meta-item" style={{ color: '#60a5fa', background: '#3b82f620', padding: '0.1rem 0.4rem', borderRadius: '4px', border: '1px solid #3b82f640' }}>{job.workplaceType}</span>
+              )}
               {job.salary && <span className="meta-item" style={{ color: '#fbbf24' }}><DollarSign size={14}/> {job.salary}</span>}
               {job.contactName && <span className="meta-item"><User size={14}/> {job.contactName}</span>}
             </div>
