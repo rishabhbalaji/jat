@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from './supabase';
+import type { User } from '@supabase/supabase-js';
 
 export interface Job {
   id: string;
@@ -63,6 +64,7 @@ export const COLUMNS: Column[] = [
 interface JobStoreState {
   jobs: Job[];
   loading: boolean;
+  user: User | null;
 }
 
 interface JobStoreContextValue extends JobStoreState {
@@ -78,7 +80,7 @@ interface JobStoreContextValue extends JobStoreState {
 const JobStoreContext = createContext<JobStoreContextValue | undefined>(undefined);
 
 export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<JobStoreState>({ jobs: [], loading: true });
+  const [state, setState] = useState<JobStoreState>({ jobs: [], loading: true, user: null });
 
   useEffect(() => {
     // Initial fetch
@@ -87,11 +89,20 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (error) {
         console.error('Error fetching jobs:', error);
       } else if (data) {
-        setState({ jobs: data as Job[], loading: false });
+        setState(prev => ({ ...prev, jobs: data as Job[], loading: false }));
       }
     };
 
     fetchJobs();
+
+    // Setup Auth
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setState(prev => ({ ...prev, user: session?.user || null }));
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setState(prev => ({ ...prev, user: session?.user || null }));
+    });
 
     // Subscribe to realtime changes
     const channel = supabase
@@ -121,6 +132,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     return () => {
       supabase.removeChannel(channel);
+      subscription.unsubscribe();
     };
   }, []);
 

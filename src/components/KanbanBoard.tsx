@@ -15,7 +15,7 @@ interface KanbanBoardProps {
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, viewFilter }) => {
-  const { jobs, updateJobStatus, updateJobSubStatus } = useJobStore();
+  const { jobs, updateJobStatus, updateJobSubStatus, user } = useJobStore();
   const [activeJob, setActiveJob] = useState<Job | null>(null);
   const [promptJobId, setPromptJobId] = useState<string | null>(null);
   const [editPromptJob, setEditPromptJob] = useState<Job | null>(null);
@@ -29,6 +29,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
   );
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (!user) return;
     const { active } = event;
     if (active.data.current?.type === 'Job') {
       setActiveJob(active.data.current.job);
@@ -36,6 +37,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (!user) return;
     setActiveJob(null);
     const { active, over } = event;
     if (!over) return;
@@ -99,7 +101,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
                   key={col.id} 
                   column={col} 
                   jobs={jobs.filter(j => j.statusId === col.id)} 
-                  onDoubleClick={() => onDoubleClickColumn?.(col.id)}
+                  onDoubleClick={() => { if (user) onDoubleClickColumn?.(col.id); }}
                 />
               ))}
 
@@ -110,7 +112,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onDoubleClickColumn, v
                     key={col.id} 
                     column={col} 
                     jobs={jobs.filter(j => j.statusId === col.id)} 
-                    onDoubleClick={() => onDoubleClickColumn?.(col.id)}
+                    onDoubleClick={() => { if (user) onDoubleClickColumn?.(col.id); }}
                   />
                 ))}
               </div>

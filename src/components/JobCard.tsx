@@ -11,7 +11,7 @@ interface JobCardProps {
 }
 
 export const JobCard: React.FC<JobCardProps> = ({ job }) => {
-  const { deleteJob, updateJobSubStatus } = useJobStore();
+  const { deleteJob, updateJobSubStatus, user } = useJobStore();
   const [isEditing, setIsEditing] = useState(false);
   const {
     attributes,
@@ -43,6 +43,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
         {...listeners}
         className={`job-card ${isDragging ? 'job-card-dragging' : ''} ${isStale ? 'job-card-stale' : ''}`}
         onDoubleClick={(e) => {
+          if (!user) return;
           e.stopPropagation();
           setIsEditing(true);
         }}
@@ -70,6 +71,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
                   className="status-badge-select" 
                   style={{ backgroundColor: statusObj.color + '20', color: statusObj.color, border: `1px solid ${statusObj.color}` }}
                   value={job.subStatus}
+                  disabled={!user}
                   onChange={(e) => updateJobSubStatus(job.id, e.target.value)}
                   onPointerDown={(e) => e.stopPropagation()}
                 >
@@ -124,29 +126,33 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
               <ExternalLink size={16} />
             </a>
           )}
-          <button 
-            className="btn-edit icon-button" 
-            style={{ color: '#a1a1aa' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditing(true);
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            title="Edit Job"
-          >
-            <Edit2 size={16} />
-          </button>
-          <button 
-            className="btn-delete icon-button" 
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteJob(job.id);
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            title="Delete Job"
-          >
-            <Trash2 size={16} />
-          </button>
+          {user && (
+            <>
+              <button 
+                className="btn-edit icon-button" 
+                style={{ color: '#a1a1aa' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                }}
+                onPointerDown={(e) => e.stopPropagation()}
+                title="Edit Job"
+              >
+                <Edit2 size={16} />
+              </button>
+              <button 
+                className="btn-delete icon-button" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteJob(job.id);
+                }}
+                onPointerDown={(e) => e.stopPropagation()}
+                title="Delete Job"
+              >
+                <Trash2 size={16} />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

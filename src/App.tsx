@@ -3,10 +3,13 @@ import { Download, Upload, Plus } from 'lucide-react';
 import { JobStoreProvider, useJobStore, COLUMNS } from './lib/store';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AddJobModal } from './components/AddJobModal';
+import { AuthModal } from './components/AuthModal';
+import { supabase } from './lib/supabase';
 
 const AppContent: React.FC = () => {
-  const { jobs, importJobs } = useJobStore();
+  const { jobs, importJobs, user } = useJobStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [defaultStatus, setDefaultStatus] = useState<string | undefined>(undefined);
   const [viewFilter, setViewFilter] = useState<string>('all');
 
@@ -53,9 +56,20 @@ const AppContent: React.FC = () => {
       <nav className="top-nav">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <h1 className="logo">JAT</h1>
-          <button className="btn-primary" onClick={() => handleOpenModal()} style={{ padding: '0.4rem 1rem' }}>
-            <Plus size={16} /> Add Job
-          </button>
+          {user ? (
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button className="btn-primary" onClick={() => handleOpenModal()} style={{ padding: '0.4rem 1rem' }}>
+                <Plus size={16} /> Track New Application
+              </button>
+              <button className="btn-secondary" onClick={() => supabase.auth.signOut()} style={{ padding: '0.4rem 1rem' }}>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button className="btn-primary" onClick={() => setIsAuthModalOpen(true)} style={{ padding: '0.4rem 1rem' }}>
+              Login
+            </button>
+          )}
         </div>
 
         <div className="view-tabs" style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', flex: 1, justifyContent: 'center', margin: '0 2rem' }}>
@@ -128,6 +142,7 @@ const AppContent: React.FC = () => {
       </main>
 
       {isModalOpen && <AddJobModal onClose={() => setIsModalOpen(false)} defaultStatusId={defaultStatus} />}
+      {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} />}
     </div>
   );
 };
