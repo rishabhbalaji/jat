@@ -52,7 +52,7 @@ export interface Column {
 }
 
 export const COLUMNS: Column[] = [
-  { id: 'pipeline', title: 'Pipeline / Contact' },
+  // { id: 'pipeline', title: 'Pipeline / Contact' },
   { id: 'waiting', title: 'Waiting for Response' },
   { id: 'follow-up', title: '2 Week Follow Up Needed' },
   { id: 'interview', title: 'Interview Stage' },
@@ -140,7 +140,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
+
     // Optimistic UI update
     setState(prev => ({ ...prev, jobs: [...prev.jobs, newJob] }));
 
@@ -155,16 +155,16 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     let newSubStatus = job.subStatus;
     if (job.statusId !== newStatusId) {
-       const currentSubStatusObj = SUB_STATUSES.find(s => s.id === job.subStatus);
-       if (!currentSubStatusObj || currentSubStatusObj.columnId !== newStatusId) {
-         newSubStatus = COLUMN_DEFAULT_SUBSTATUS[newStatusId];
-       }
+      const currentSubStatusObj = SUB_STATUSES.find(s => s.id === job.subStatus);
+      if (!currentSubStatusObj || currentSubStatusObj.columnId !== newStatusId) {
+        newSubStatus = COLUMN_DEFAULT_SUBSTATUS[newStatusId];
+      }
     }
 
-    const updates = { 
-      statusId: newStatusId, 
+    const updates = {
+      statusId: newStatusId,
       subStatus: newSubStatus,
-      updatedAt: new Date().toISOString() 
+      updatedAt: new Date().toISOString()
     };
 
     // Optimistic UI
@@ -186,7 +186,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const newStatusId = subStatusObj ? subStatusObj.columnId : job.statusId;
 
     const updates: Partial<Job> = {
-      statusId: newStatusId, 
+      statusId: newStatusId,
       subStatus: newSubStatusId,
       updatedAt: new Date().toISOString()
     };
@@ -208,7 +208,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const updateJob = async (id: string, updates: Partial<Omit<Job, 'id' | 'createdAt' | 'updatedAt'>>) => {
     const updatePayload = { ...updates, updatedAt: new Date().toISOString() };
-    
+
     // Optimistic UI
     setState(prev => ({
       ...prev,
@@ -235,7 +235,7 @@ export const JobStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const resetJobs = async () => {
     // Optimistic UI
     setState(prev => ({ ...prev, jobs: [] }));
-    
+
     // Note: This requires a TRUNCATE or bulk delete. Supabase delete requires a filter.
     const { error } = await supabase.from('jobs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (error) console.error("Error resetting jobs:", error);
