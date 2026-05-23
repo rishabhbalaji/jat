@@ -82,7 +82,7 @@ const AppContent: React.FC = () => {
           </button>
           {COLUMNS.map(col => {
             let label = col.title;
-            if (col.id === 'pipeline') label = 'Contact';
+            if (col.id === 'pipeline') label = 'Yet to Apply';
             if (col.id === 'applied') label = 'Waiting';
             if (col.id === 'follow-up') label = 'Follow Up';
             if (col.id === 'interview') label = 'Interview';

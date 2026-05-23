@@ -27,7 +27,7 @@ export interface SubStatus {
 }
 
 export const SUB_STATUSES: SubStatus[] = [
-  { id: 'pipeline', label: 'To Apply / Contact', color: '#3b82f6', columnId: 'pipeline' },
+  { id: 'pipeline', label: 'Yet to Apply', color: '#3b82f6', columnId: 'pipeline' },
   { id: 'waiting', label: 'Waiting', color: '#64748b', columnId: 'waiting' },
   { id: 'follow-up', label: 'Follow Up', color: '#f59e0b', columnId: 'follow-up' },
   { id: 'hr-screen', label: 'HR Screen', color: '#8b5cf6', columnId: 'interview' },
@@ -53,7 +53,7 @@ export interface Column {
 }
 
 export const COLUMNS: Column[] = [
-  // { id: 'pipeline', title: 'Pipeline / Contact' },
+  { id: 'pipeline', title: 'Yet to Apply' },
   { id: 'waiting', title: 'Waiting for Response' },
   { id: 'follow-up', title: '2 Week Follow Up Needed' },
   { id: 'interview', title: 'Interview Stage' },
