@@ -29,7 +29,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
   };
 
   // Check if stale (unchanged for 14+ days)
-  const isStale = (Date.now() - new Date(job.updatedAt).getTime()) > 14 * 24 * 60 * 60 * 1000;
+  const isStale = job.statusId === 'waiting' && (Date.now() - new Date(job.updatedAt).getTime()) > 14 * 24 * 60 * 60 * 1000;
   // Format dates
   const formattedDateApplied = job.dateApplied ? new Date(job.dateApplied).toLocaleDateString() : new Date(job.createdAt).toLocaleDateString();
   const formattedDateUpdated = new Date(job.updatedAt).toLocaleDateString();
