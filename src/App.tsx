@@ -4,6 +4,7 @@ import { JobStoreProvider, useJobStore, COLUMNS } from './lib/store';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AddJobModal } from './components/AddJobModal';
 import { AuthModal } from './components/AuthModal';
+import { AnalyticsView } from './components/AnalyticsView';
 import { supabase } from './lib/supabase';
 
 const AppContent: React.FC = () => {
@@ -80,6 +81,13 @@ const AppContent: React.FC = () => {
           >
             Dashboard
           </button>
+          <button
+            className="btn-secondary"
+            onClick={() => setViewFilter('analytics')}
+            style={{ backgroundColor: viewFilter === 'analytics' ? 'var(--primary-color)' : 'transparent', color: viewFilter === 'analytics' ? '#F9F6EE' : 'var(--text-color)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            Analytics
+          </button>
           {COLUMNS.map(col => {
             let label = col.title;
             if (col.id === 'pipeline') label = 'Yet to Apply';
@@ -128,17 +136,23 @@ const AppContent: React.FC = () => {
       </nav>
 
       <main className="main-content">
-        <KanbanBoard onDoubleClickColumn={handleOpenModal} viewFilter={viewFilter} />
-        <div style={{
-          textAlign: 'right',
-          marginTop: '0.5rem',
-          color: '#FF3131',
-          fontSize: '0.75rem',
-          fontWeight: 700,
-          letterSpacing: '0.05em',
-        }}>
-          Total Job Applications: {jobs.filter(j => j.statusId !== 'pipeline').length}
-        </div>
+        {viewFilter === 'analytics' ? (
+          <AnalyticsView />
+        ) : (
+          <>
+            <KanbanBoard onDoubleClickColumn={handleOpenModal} viewFilter={viewFilter} />
+            <div style={{
+              textAlign: 'right',
+              marginTop: '0.5rem',
+              color: '#FF3131',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.05em',
+            }}>
+              Total Job Applications: {jobs.filter(j => j.statusId !== 'pipeline').length}
+            </div>
+          </>
+        )}
       </main>
 
       {isModalOpen && <AddJobModal onClose={() => setIsModalOpen(false)} defaultStatusId={defaultStatus} />}
